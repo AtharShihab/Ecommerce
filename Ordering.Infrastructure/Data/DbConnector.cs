@@ -15,7 +15,9 @@ namespace Ordering.Infrastructure.Data
 
         public IDbConnection CreateConnection()
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string _connectionString = _configuration.GetConnectionString("DefaultConnection");
+
             return new SqliteConnection(_connectionString);
         }
     }

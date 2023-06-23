@@ -5,9 +5,9 @@ using Ordering.Infrastructure.Repositories.Command.Base;
 
 namespace Ordering.Infrastructure.Repositories.Command
 {
-    public class CommandCustomerRepository : CommandRepository<Customer>, ICommandCustomerRepository
+    public class CustomerCommandRepository : CommandRepository<Customer>, ICustomerCommandRepository
     {
-        public CommandCustomerRepository(OrderingContext context) : base(context)
+        public CustomerCommandRepository(OrderingContext context) : base(context)
         {
         }
     }
