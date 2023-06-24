@@ -1,24 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ordering.Core.Repositories.Command;
 using Ordering.Core.Repositories.Command.Base;
-using Ordering.Core.Repositories.Query;
+using Ordering.Core.Repositories.Command;
 using Ordering.Core.Repositories.Query.Base;
+using Ordering.Core.Repositories.Query;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Identity;
-using Ordering.Infrastructure.Repositories.Command;
 using Ordering.Infrastructure.Repositories.Command.Base;
-using Ordering.Infrastructure.Repositories.Query;
+using Ordering.Infrastructure.Repositories.Command;
 using Ordering.Infrastructure.Repositories.Query.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ordering.Infrastructure.Repositories.Query;
+using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Common.Interfaces;
+using Ordering.Infrastructure.Services;
 
-namespace Ordering.Application
+namespace Ordering.Infrastructure
 {
     public static class DependencyInjection
     {
@@ -47,6 +44,8 @@ namespace Ordering.Application
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
 
             services.AddScoped(typeof(ICommandRepository<>), typeof(CommandRepository<>));
             services.AddTransient<ICustomerCommandRepository, CustomerCommandRepository>();
