@@ -17,6 +17,7 @@ namespace Ordering.Application.Mapper
             CreateMap<OrderMaster, CreateOrderCommand>().ReverseMap();
             CreateMap<OrderMaster, OrderResponse>().ReverseMap();
             CreateMap<OrderDetail, CreateOrderDetailCommand>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailResponse>().ReverseMap();
         }
     }
 }
