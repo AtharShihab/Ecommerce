@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Exceptions;
 using Ordering.Application.Common.Interfaces;
@@ -26,7 +25,7 @@ namespace Ordering.Infrastructure.Services
         public async Task<bool> AssignUserToRolesAsync(string userName, IList<string> roleNames)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
-            if(user == null)
+            if (user == null)
             {
                 throw new NotFoundException("User Not Found");
             }
@@ -38,7 +37,7 @@ namespace Ordering.Infrastructure.Services
         public async Task<bool> CreateRoleAsync(string roleName)
         {
             var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new ValidationException(result.Errors);
             }
@@ -57,14 +56,14 @@ namespace Ordering.Infrastructure.Services
 
             var result = await _userManager.CreateAsync(user, password);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new ValidationException(result.Errors);
             }
 
             var addUserRoles = await _userManager.AddToRolesAsync(user, roles);
 
-            if(!addUserRoles.Succeeded)
+            if (!addUserRoles.Succeeded)
             {
                 throw new ValidationException(addUserRoles.Errors);
             }
@@ -75,19 +74,19 @@ namespace Ordering.Infrastructure.Services
         public async Task<bool> DeleteRoleAsync(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
-            if(role == null)
+            if (role == null)
             {
                 throw new NotFoundException("Role not found");
             }
 
-            if( role.Name == "Administrator")
+            if (role.Name == "Administrator")
             {
                 throw new BadRequestException("You can not delete Administrator role");
             }
 
             var result = await _roleManager.DeleteAsync(role);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new ValidationException(result.Errors);
             }
@@ -98,19 +97,19 @@ namespace Ordering.Infrastructure.Services
         public async Task<bool> DeleteUserAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 throw new NotFoundException("User not found");
             }
 
-            if(user.UserName == "system" || user.UserName == "admin")
+            if (user.UserName == "system" || user.UserName == "admin")
             {
                 throw new BadRequestException("You can not delete system or admin user");
             }
 
-            var result = await _userManager.DeleteAsync(user); 
-            
-            if(!result.Succeeded)
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
             {
                 throw new ValidationException(result.Errors);
             }
@@ -122,7 +121,10 @@ namespace Ordering.Infrastructure.Services
         {
             var users = await _userManager.Users.Select(x => new
             {
-                x.Id, x.FullName, x.UserName, x.Email
+                x.Id,
+                x.FullName,
+                x.UserName,
+                x.Email
             }).ToListAsync();
 
             return users.Select(x => (x.Id, x.FullName, x.UserName, x.Email)).ToList();
@@ -136,7 +138,7 @@ namespace Ordering.Infrastructure.Services
         public async Task<(string id, string roleName)> GetRoleByIdAsync(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
-            if(role is null)
+            if (role is null)
             {
                 throw new NotFoundException("Role not found");
             }
@@ -148,7 +150,8 @@ namespace Ordering.Infrastructure.Services
         {
             var roles = await _roleManager.Roles.Select(x => new
             {
-                x.Id, x.Name
+                x.Id,
+                x.Name
             }).ToListAsync();
 
             return roles.Select(x => (x.Id, x.Name)).ToList();
@@ -157,7 +160,7 @@ namespace Ordering.Infrastructure.Services
         public async Task<(string userId, string fullName, string userName, string email, IList<string> roles)> GetUserDetailsAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if(user is null)
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -170,7 +173,7 @@ namespace Ordering.Infrastructure.Services
         public async Task<(string userId, string fullName, string userName, string email, IList<string> roles)> GetUserDetailsByUserNameAsync(string userName)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
-            if(user is null)
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -182,8 +185,8 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<string> GetUserIdAsync(string userName)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x =>x.UserName == userName);
-            if(user is null)
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -193,8 +196,8 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<string> GetUserNameAsync(string userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x =>x.Id == userId);
-            if(user is null)
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -204,12 +207,12 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<List<string>> GetUserRolesAsync(string userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x =>x.Id == userId);
-            if(user is null)
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
-            
+
             var roles = await _userManager.GetRolesAsync(user);
 
             return roles.ToList();
@@ -217,8 +220,8 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<bool> IsInRoleAsync(string userId, string roleName)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x =>x.Id == userId);
-            if(user is null)
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
@@ -239,10 +242,10 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<bool> UpdateRoleAsync(string id, string roleName)
         {
-            if(roleName != null)
+            if (roleName != null)
             {
                 var role = await _roleManager.FindByIdAsync(id);
-                if(role is null) 
+                if (role is null)
                 {
                     throw new NotFoundException("Role not found");
                 }
@@ -260,19 +263,19 @@ namespace Ordering.Infrastructure.Services
         public async Task<bool> UpdateUserProfileAsync(string id, string fullName, string email, IList<string> roles)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if(user is null)
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }
             user.FullName = fullName;
             user.Email = email;
             var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new ValidationException(result.Errors);
             }
 
-            if(roles != null && roles.Count > 0)
+            if (roles != null && roles.Count > 0)
             {
                 var updateRoles = await UpdateUserRolesAsync(user.UserName, roles);
             }
@@ -282,8 +285,8 @@ namespace Ordering.Infrastructure.Services
 
         public async Task<bool> UpdateUserRolesAsync(string userName, IList<string> roleNames)
         {
-            var user =  await _userManager.FindByNameAsync(userName);
-            if(user is null)
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user is null)
             {
                 throw new NotFoundException("User not found");
             }

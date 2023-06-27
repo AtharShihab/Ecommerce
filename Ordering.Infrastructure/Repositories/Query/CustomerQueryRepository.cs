@@ -3,16 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Ordering.Core.Entities;
 using Ordering.Core.Repositories.Query;
 using Ordering.Infrastructure.Repositories.Query.Base;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ordering.Infrastructure.Repositories.Query
 {
-    public class CustomerQueryRepository : QueryRepository<Customer>,ICustomerQueryRepository
+    public class CustomerQueryRepository : QueryRepository<Customer>, ICustomerQueryRepository
     {
         public CustomerQueryRepository(IConfiguration configuration) : base(configuration)
         {
@@ -45,7 +40,7 @@ namespace Ordering.Infrastructure.Repositories.Query
 
                 using (var connection = CreateConnection())
                 {
-                    return (await connection.QueryFirstOrDefaultAsync<Customer>(query,parameters));
+                    return (await connection.QueryFirstOrDefaultAsync<Customer>(query, parameters));
                 }
             }
             catch (Exception ex)
